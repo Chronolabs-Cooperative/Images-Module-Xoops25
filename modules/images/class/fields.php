@@ -135,5 +135,62 @@ class ImagesFieldsHandler extends ImagesXoopsPersistableObjectHandler
         return false;
     }
     
+    /**
+     * get an Array of a field
+     * 
+     * @param string $field
+     * @param string $return
+     * @return string[]
+     */
+    function getFieldArray($field = '', $return = 'url')
+    {
+        $result = array('');
+        $sql = "SELECT DISTINCT `$return` FROM `" . $GLOBALS['xoopsDB']->prefix('images_images') . "` WHERE `field` = '$field'";
+        if ($query = $GLOBALS['xoopsDB']->queryF($sql))
+        {
+            $value = 'https://';
+            while(count($result)<$GLOBALS['xoopsDB']->getRowsNum($query))
+            {
+                list($value) = $GLOBALS['xoopsDB']->fetchRow($query);
+                $result[] = $value;
+            }
+            if ($return == 'url')
+            {
+                $result[] = 'http://';
+                $result[] = 'https://';
+                $result[] = '';
+            }
+            array_unique($result);
+            sort($result, SORT_ASC);
+        }
+        return $result;
+    }
+    
+    /**
+     * adds to the images count
+     * 
+     * @param string $field
+     * @param string $typal
+     * @param number $number
+     */
+    function addImages($field = '', $typal = '', $number = 1)
+    {
+        $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_fields") . "` SET `images` = `images` + '$number' WHERE `field` = '" . $field . "' AND `typal` = '" . $typal . "'";
+        @$GLOBALS['xoopsDB']->queryF($sql);
+    }
+    
+    
+    /**
+     * adds to the error count
+     *
+     * @param string $field
+     * @param string $typal
+     * @param number $number
+     */
+    function addErrors($field = '', $typal = '', $number = 1)
+    {
+        $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_fields") . "` SET `errors` = `errors` + '$number', `errored` = UNIX_TIMESTAMP() WHERE `field` = '" . $field . "' AND `typal` = '" . $typal . "'";
+        @$GLOBALS['xoopsDB']->queryF($sql);
+    }
 }
 ?>

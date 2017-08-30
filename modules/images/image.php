@@ -21,6 +21,7 @@
  * @link			http://internetfounder.wordpress.com
  */
 
+global $imagesConfigList;
 
 include_once __DIR__ . "/header.php";
 
@@ -36,14 +37,16 @@ if ($field = $fieldsHandler->getByHash($_REQUEST['field'], $_REQUEST['typal']))
 {
     if ($image = $imagesHandler->getByHash($_REQUEST['hash'], $field->getVar('field')))
     {
-        if (isset($_REQUEST['width']) && !empty($_REQUEST['width']))
-            $width = $_REQUEST['width'];
-        if (isset($_REQUEST['height']) && !empty($_REQUEST['height']))
-            $height = $_REQUEST['height'];
+        if (isset($_REQUEST['width']) && !empty($_REQUEST['width']) && ((integer)$_REQUEST['width'] > $image->getMinimumWidth() && (integer)$_REQUEST['width'] < $image->getMaximumWidth()))
+            $width = (integer)$_REQUEST['width'];
         else 
-            $height = $width;
+            $width = $image->getWidth();
+        if (isset($_REQUEST['height']) && !empty($_REQUEST['height']) && ((integer)$_REQUEST['height'] > $image->getMinimumHeight() && (integer)$_REQUEST['height'] < $image->getMaximumHeight()))
+            $height = (integer)$_REQUEST['height'];
+        else 
+            $height = $image->getHeight();
         
-        switch((isset($_REQUEST['format']) && !empty($_REQUEST['format'])?$_REQUEST['format']:'default'))
+        switch((isset($_REQUEST['format']) && !empty($_REQUEST['format'])?$_REQUEST['format']:$imagesConfigList['png']))
         {
             default:
             case $imagesConfigList['png']:

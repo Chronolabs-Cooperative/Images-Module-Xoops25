@@ -710,13 +710,25 @@ class ImagesImagesHandler extends ImagesXoopsPersistableObjectHandler
         {
             if (strlen($object->getVar('field'))==0 || strlen($object->getVar('url'))== 0)
                 return false;
+        
+            $fieldsHandler = xoops_getModuleHandler('fields', basename(__DIR__));
+            $field = $fieldsHandler->create();
+            $field->setVar('field', $object->getVar('field'));
+            $field->setVar('typal', $object->getFieldTypal());
+            if (!$field = $fieldsHandler->get($fieldsHandler->insert($field, true)))
+                return false;
+
             if ($object->getVar('uid')==0 && is_object($GLOBALS['xoopsUser']))
                 $object->setVar('uid', $GLOBALS['xoopsUser']->getVar('uid'));
             $object->setVar('created', time());
-            $object->setVar('type', $imagesConfigList['format']);
+            if (strlen($object->getVar('type')) == 0 || $object->getVar('type') == 'unknown')
+                $object->setVar('type', $imagesConfigList['format']);
             $object->setVar('storage',  $imagesConfigList['storage']);
-            $crc = new xcp($data = $object->getVar('uid').$imagesConfigList['format'].microtime().$object->getVar('url'), mt_rand(0,255), mt_rand(5,14));
-            $object->setVar('hash', $crc->crc);
+            if (strlen($object->getVar('hash')) == 0)
+            {
+                $crc = new xcp($data = $field->getVar('hash').$object->getVar('uid').$imagesConfigList['format'].microtime().$object->getVar('url'), mt_rand(0,255), mt_rand(5,14));
+                $object->setVar('hash', $crc->crc);
+            }
             $criteria = new CriteriaCompo(new Criteria('uid', $object->getVar('uid')));    
             $criteria->add(new Criteria('field', $object->getVar('field')));
             if (!in_array($object->getVar('field'), $imagesConfigList['ascii_fields']))
@@ -756,6 +768,7 @@ class ImagesImagesHandler extends ImagesXoopsPersistableObjectHandler
                     unset($asciiobjs);
                 }
             }
+            $fieldsHandler->addImages($object->getVar('field'), $object->getFieldTypal());
         }
         $object->setVar('updated', time());
         return parent::insert($object, true);
