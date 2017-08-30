@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteRule ^([0-9a-zA-Z\-]{4-18})/(icons|logo|photo|avatar)/([0-9a-zA-Z\-]{4-18})(.png|.jpg|.gif|.txt)$ ./image.php?field=$1&type=$2&hash=$3&format=$4 [L,NC,QSA]
+RewriteRule ^([0-9a-zA-Z\-]{4-18})/(icons|logo|photo|avatar)/([0-9]+)/([0-9a-zA-Z\-]{4-18})(.png|.jpg|.gif|.txt)$ ./image.php?field=$1&type=$2&width=$3&hash=$4&format=$5 [L,NC,QSA]
+RewriteRule ^([0-9a-zA-Z\-]{4-18})/(icons|logo|photo|avatar)/([0-9]+)x([0-9]+)/([0-9a-zA-Z\-]{4-18})(.png|.jpg|.gif)$ ./image.php?field=$1&type=$2&width=$3&height=$4&hash=$5&format=$6 [L,NC,QSA]
+RewriteRule ^([0-9a-zA-Z\-]{4-18})/(icons|logo|photo|avatar)/(small|medium|large)/([0-9a-zA-Z\-]{4-18})(.txt)$ ./image.php?field=$1&type=$2&scale=$3&hash=$4&format=$5 [L,NC,QSA]
+RewriteRule ^(index|icons|logo|photo|avatar)(.html)$ ./index.php?typal=$1 [L,NC,QSA]
