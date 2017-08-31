@@ -26,11 +26,11 @@ if (!defined('_MD_CONSENT_MODULE_DIRNAME')) {
 require_once (__DIR__ . DIRECTORY_SEPARATOR . 'objects.php');
 
 /**
- * Database Table for Statistics in Legal Consent Module
+ * Database Table for statistics_score in Legal Consent Module
  *
  * For Table:-
  * <code>
- * CREATE TABLE `images_statistics` (
+ * CREATE TABLE `images_statistics_score` (
   `id` mediumint(32) NOT NULL AUTO_INCREMENT,
   `mode` enum('hourly','daily','weekly','biweekly','monthly','quarterly','yearly') NOT NULL DEFAULT '',
   `typal` enum('icons','logo','photo','avatar') NOT NULL DEFAULT '',
@@ -230,36 +230,27 @@ require_once (__DIR__ . DIRECTORY_SEPARATOR . 'objects.php');
  * @author Simon Roberts (wishcraft@users.sourceforge.net)
  * @copyright copyright (c) 2015 labs.coop
  */
-class ImagesStatistics extends ImagesXoopsObject
+class ImagesScores extends ImagesXoopsObject
 {
 
-	var $handler = 'ImagesStatisticsHandler';
+	var $handler = 'ImagesScoresHandler';
 	
     function __construct($id = null)
     {   	
     	
         self::initVar('id', XOBJ_DTYPE_INT, null, false);
+        self::initVar('statistic_id', XOBJ_DTYPE_INT, null, false);
+        self::initVar('value', XOBJ_DTYPE_ENUM, null, false, false, imagesEnumeratorValues(basename(__FILE__), 'value'));
         self::initVar("mode", XOBJ_DTYPE_ENUM, '', false, false, false, imagesEnumeratorValues(basename(__FILE__), 'mode'));
+        self::initVar('field', XOBJ_DTYPE_ENUM, null, false, false, imagesEnumeratorValues(basename(__FILE__), 'field'));
+        self::initVar('state', XOBJ_DTYPE_ENUM, null, false, false, imagesEnumeratorValues(basename(__FILE__), 'state'));
         self::initVar("typal", XOBJ_DTYPE_ENUM, '', false, false, false, imagesEnumeratorValues(basename(__FILE__), 'typal'));
         self::initVar("type", XOBJ_DTYPE_ENUM, '', false, false, false, imagesEnumeratorValues(basename(__FILE__), 'type'));
         self::initVar('typeid', XOBJ_DTYPE_INT, null, false);
-        self::initVar('hash', XOBJ_DTYPE_TXTBOX, null, false, 18);
-        self::initVar('key', XOBJ_DTYPE_TXTBOX, null, false, 64);
         self::initVar('timezone', XOBJ_DTYPE_ENUM, null, false, false, imagesEnumeratorValues(basename(__FILE__), 'timezone'));
-        self::initVar('commence', XOBJ_DTYPE_INT, null, false);
-        self::initVar('finished', XOBJ_DTYPE_INT, null, false);
-        self::initVar('year', XOBJ_DTYPE_INT, null, false);
-        self::initVar('month', XOBJ_DTYPE_INT, null, false);
-        self::initVar('day', XOBJ_DTYPE_INT, null, false);
-        self::initVar('week', XOBJ_DTYPE_INT, null, false);
-        self::initVar('hour', XOBJ_DTYPE_INT, null, false);
-        self::initVar('minute', XOBJ_DTYPE_INT, null, false);
-        self::initVar('seconds', XOBJ_DTYPE_INT, null, false);
-        self::initVar('segment-month', XOBJ_DTYPE_ENUM, 'Both', false, false, false, ImagesEnumeratorValues(basename(__FILE__), 'segment-month'));
-        self::initVar('segment-hour', XOBJ_DTYPE_ENUM, 'Both', false, false, false, ImagesEnumeratorValues(basename(__FILE__), 'segment-hour'));
-        self::initVar('segment-minute', XOBJ_DTYPE_ENUM, 'Both', false, false, false, ImagesEnumeratorValues(basename(__FILE__), 'segment-minute'));
-        self::initVar('day-name', XOBJ_DTYPE_ENUM, 'Both', false, false, false, ImagesEnumeratorValues(basename(__FILE__), 'day-name'));
-        self::initVar('stat', XOBJ_DTYPE_FLOAT, null, false);
+        self::initVar('written', XOBJ_DTYPE_INT, null, false);
+        self::initVar('float', XOBJ_DTYPE_FLOAT, null, false);
+        self::initVar('integer', XOBJ_DTYPE_FLOAT, null, false);
         
         if (!empty($id) && !is_null($id))
         {
@@ -273,11 +264,11 @@ class ImagesStatistics extends ImagesXoopsObject
 
 
 /**
- * Handler Class for Statistics
+ * Handler Class for statistics_score
  * @author Simon Roberts (wishcraft@users.sourceforge.net)
  * @copyright copyright (c) 2015 labs.coop
  */
-class ImagesStatisticsHandler extends ImagesXoopsPersistableObjectHandler
+class ImagesScoresHandler extends ImagesXoopsPersistableObjectHandler
 {
 	
     /**
@@ -291,14 +282,14 @@ class ImagesStatisticsHandler extends ImagesXoopsPersistableObjectHandler
 	 * 
 	 * @var string
 	 */
-	var $tbl = 'images_statistics';
+	var $tbl = 'images_scores';
 	
 	/**
 	 * Child Object Handling Class
 	 *
 	 * @var string
 	 */
-	var $child = 'ImagesStatistics';
+	var $child = 'ImagesScores';
 	
 	/**
 	 * Child Object Identity Key
@@ -322,40 +313,7 @@ class ImagesStatisticsHandler extends ImagesXoopsPersistableObjectHandler
     		$db = $GLOBAL["xoopsDB"];
         parent::__construct($db, $this->tbl, $this->child, $this->identity, $this->envalued);
     }
-    
-    /**
-     * Creates a ImagesStatistic Object for new
-     * 
-     * {@inheritDoc}
-     * @see XoopsPersistableObjectHandler::create()
-     */
-    function create($commence = 0)
-    {
-        if ($commence == 0)
-            $commence = time();
-        $object = parent::create(true);
-        $zone = date_default_timezone_get();
-        if (strpos($zone, '/')==0)
-            $object->setVar('timezone', "$zone/$zone");
-        else 
-            $object->setVar('timezone', "$zone");
-        $object->setVar('commence', $commence);
-        $object->setVar('year', date('Y', $object->getVar('commence')));
-        $object->setVar('month', date('m', $object->getVar('commence')));
-        $object->setVar('day', date('d', $object->getVar('commence')));
-        $object->setVar('week', date('W', $object->getVar('commence')));
-        $object->setVar('hour', date('H', $object->getVar('commence')));
-        $object->setVar('minute', date('i', $object->getVar('commence')));
-        $object->setVar('seconds', date('s', $object->getVar('commence')));
-        $segments = ImagesEnumeratorValues(basename(__FILE__), 'segment-month');
-        $object->setVar('segment-month', $segments[floor((date('m', $object->getVar('commence'))-1) / count($segments))]);
-        $segments = ImagesEnumeratorValues(basename(__FILE__), 'segment-hour');
-        $object->setVar('segment-hour', $segments[floor((date('H', $object->getVar('commence'))-1) / count($segments))]);
-        $segments = ImagesEnumeratorValues(basename(__FILE__), 'segment-minute');
-        $object->setVar('segment-minute', $segments[floor((date('i', $object->getVar('commence'))-1) / count($segments))]);
-        $object->setVar('day-name', date('D', $object->getVar('commence')));
-        return $object;
-    }
+
     
     /**
      * inserts a new record into the database
@@ -363,121 +321,20 @@ class ImagesStatisticsHandler extends ImagesXoopsPersistableObjectHandler
      * {@inheritDoc}
      * @see XoopsPersistableObjectHandler::insert()
      */
-    function insert(ImagesStatistics $object, $force = true)
+    function insert(ImagesScores $object, $force = true)
     {
         if ($object->isNew())
         {
-            if ($object->getVar('stat')==0)
+            if ($object->getVar('float')==0 && $object->getVar('integer')==0 )
                 return -1;
-            
-            $object->setVar('finished', time());
-            
-            if ($statistic_id = parent::insert($object, $force))
-            {
-                $scoresHandler = xoops_getModuleHandler('scores', basename(dirname(__DIR__)));
-                foreach(imagesEnumeratorValues(basename(__FILE__), 'mode') as $mode)
-                {
-                    foreach(array('item','key','typal','type') as $state)
-                    {
-                        switch ($state)
-                        {
-                            case 'item':
-                                $criteria = new CriteriaCompo(new Criteria('typal', $object->getVar('typal')));
-                                $criteria->add(new Criteria('mode', $object->getVar('mode')));
-                                $criteria->add(new Criteria('type', $object->getVar('type')));
-                                $criteria->add(new Criteria('commence', time() - self::$_periodics[$mode], "<="));
-                                $criteria->add(new Criteria('finished', time(), ">="));
-                                foreach(self::getStatisticArray($criteria) as $key => $value)
-                                {
-                                    $score = $scoresHandler->create();
-                                    $score->setVars($objects->getValues('mode', 'typal', 'type', 'typeid', 'timezone'));
-                                    $score->setVars('field', $key);
-                                    $score->setVars('statistic_id', $statistic_id);
-                                    if ($key!=='end') {
-                                        $score->setVars('value', 'float');
-                                        $score->setVars('float', $value);
-                                    } else {
-                                        $score->setVars('value', 'integer');
-                                        $score->setVars('integer', $value);
-                                    }
-                                    $scoresHandler->insert($score, true);
-                                }
-                                break;
-                            case 'key':
-                                $criteria = new CriteriaCompo(new Criteria('key', $object->getVar('key')));
-                                $criteria->add(new Criteria('mode', $object->getVar('mode')));
-                                $criteria->add(new Criteria('type', $object->getVar('type')));
-                                $criteria->add(new Criteria('commence', time() - self::$_periodics[$mode], "<="));
-                                $criteria->add(new Criteria('finished', time(), ">="));
-                                foreach(self::getStatisticArray($criteria) as $key => $value)
-                                {
-                                    $score = $scoresHandler->create();
-                                    $score->setVars($objects->getValues('mode', 'typal', 'type', 'typeid', 'timezone'));
-                                    $score->setVars('field', $key);
-                                    $score->setVars('statistic_id', $statistic_id);
-                                    if ($key!=='end') {
-                                        $score->setVars('value', 'float');
-                                        $score->setVars('float', $value);
-                                    } else {
-                                        $score->setVars('value', 'integer');
-                                        $score->setVars('integer', $value);
-                                    }
-                                    $scoresHandler->insert($score, true);
-                                }
-                                break;
-                            case 'typal':
-                                $criteria = new CriteriaCompo(new Criteria('typal', $object->getVar('typal')));
-                                $criteria->add(new Criteria('mode', $object->getVar('mode')));
-                                $criteria->add(new Criteria('commence', time() - self::$_periodics[$mode], "<="));
-                                $criteria->add(new Criteria('finished', time(), ">="));
-                                foreach(self::getStatisticArray($criteria) as $key => $value)
-                                {
-                                    $score = $scoresHandler->create();
-                                    $score->setVars($objects->getValues('mode', 'typal', 'type', 'typeid', 'timezone'));
-                                    $score->setVars('field', $key);
-                                    $score->setVars('statistic_id', $statistic_id);
-                                    if ($key!=='end') {
-                                        $score->setVars('value', 'float');
-                                        $score->setVars('float', $value);
-                                    } else {
-                                        $score->setVars('value', 'integer');
-                                        $score->setVars('integer', $value);
-                                    }
-                                    $scoresHandler->insert($score, true);
-                                }
-                                break;
-                            case 'type':
-                                $criteria = new CriteriaCompo(new Criteria('key', $object->getVar('key')));
-                                $criteria->add(new Criteria('mode', $object->getVar('mode')));
-                                $criteria->add(new Criteria('commence', time() - self::$_periodics[$mode], "<="));
-                                $criteria->add(new Criteria('finished', time(), ">="));
-                                foreach(self::getStatisticArray($criteria) as $key => $value)
-                                {
-                                    $score = $scoresHandler->create();
-                                    $score->setVars($objects->getValues('mode', 'typal', 'type', 'typeid', 'timezone'));
-                                    $score->setVars('field', $key);
-                                    $score->setVars('statistic_id', $statistic_id);
-                                    if ($key!=='end') {
-                                        $score->setVars('value', 'float');
-                                        $score->setVars('float', $value);
-                                    } else {
-                                        $score->setVars('value', 'integer');
-                                        $score->setVars('integer', $value);
-                                    }
-                                    $scoresHandler->insert($score, true);
-                                }
-                                break;
-                        }
-                    }
-                }
-            }
-            return $statistic_id;
+            $object->setVar('timezone', time());
+            $object->setVar('written', time());
         }
         return parent::insert($object, $force);
     }
     
     /**
-     * get all itemised running score statistics matching a condition
+     * get all itemised running score statistics_score matching a condition
      *
      * @param  CriteriaElement $criteria  {@link CriteriaElement} to match
      * @return array           of objects/array {@link XoopsObject}
