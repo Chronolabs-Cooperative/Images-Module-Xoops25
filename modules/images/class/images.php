@@ -41,28 +41,72 @@ class ImagesImages extends ImagesXoopsObject
      */
 	function __construct($id = null)
 	{
-		$this->initVar("id",        XOBJ_DTYPE_INT,    		null, false);
-		$this->initVar("uid",       XOBJ_DTYPE_INT,    		null, false);
-		$this->initVar("hash",	    XOBJ_DTYPE_TXTBOX,    	null, false, 16);
-		$this->initVar("field",     XOBJ_DTYPE_TXTBOX,    	null, false, 64);
-		$this->initVar("type",      XOBJ_DTYPE_ENUM,     	'unknown', false, false, false, imagesEnumeratorValues(basename(__FILE__), 'type'));
-		$this->initVar("storage",   XOBJ_DTYPE_ENUM,     	'files', false, false, false, imagesEnumeratorValues(basename(__FILE__), 'storage'));
-		$this->initVar("md5",       XOBJ_DTYPE_TXTBOX,     	null, false, 32);
-		$this->initVar("url",       XOBJ_DTYPE_TXTBOX,     	null, false, 255);
-		$this->initVar("width",     XOBJ_DTYPE_INT,     	null, false);
-		$this->initVar("height",    XOBJ_DTYPE_INT,     	null, false);
-		$this->initVar("bytes",     XOBJ_DTYPE_INT,     	null, false);
-		$this->initVar("views",     XOBJ_DTYPE_INT,     	null, false);
-		$this->initVar("viewed",    XOBJ_DTYPE_INT,     	null, false);
-		$this->initVar("updates",   XOBJ_DTYPE_INT,     	null, false);
-		$this->initVar("errors",    XOBJ_DTYPE_INT,     	null, false);
-		$this->initVar("megabytes", XOBJ_DTYPE_FLOAT,     	null, false);
-		$this->initVar("updated",   XOBJ_DTYPE_INT,     	null, false);
-		$this->initVar("created",   XOBJ_DTYPE_INT,     	null, false);
-		$this->initVar("checked",   XOBJ_DTYPE_INT,     	null, false);
-		$this->initVar("errored",   XOBJ_DTYPE_INT,     	null, false);
-		$this->initVar("emailed",   XOBJ_DTYPE_INT,     	null, false);
-		$this->initVar("data",      XOBJ_DTYPE_OTHER,     	null, false);
+		$this->initVar("id",              XOBJ_DTYPE_INT,    		null, false);
+		$this->initVar("fieldid",             XOBJ_DTYPE_INT,    		null, false);
+		$this->initVar("uid",             XOBJ_DTYPE_INT,    		null, false);
+		$this->initVar("hash",	          XOBJ_DTYPE_TXTBOX,    	null, false, 16);
+		$this->initVar("field",           XOBJ_DTYPE_TXTBOX,    	null, false, 64);
+		$this->initVar("type",            XOBJ_DTYPE_ENUM,     	    'unknown', false, false, false, imagesEnumeratorValues(basename(__FILE__), 'type'));
+		$this->initVar("storage",         XOBJ_DTYPE_ENUM,     	    'files', false, false, false, imagesEnumeratorValues(basename(__FILE__), 'storage'));
+		$this->initVar("blacklisted",     XOBJ_DTYPE_ENUM,     	    'none', false, false, false, imagesEnumeratorValues(basename(__FILE__), 'storage'));
+		$this->initVar("md5",             XOBJ_DTYPE_TXTBOX,     	null, false, 32);
+		$this->initVar("url",             XOBJ_DTYPE_TXTBOX,     	null, false, 255);
+		$this->initVar("width",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("height",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("bytes",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("views",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("updates",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_hourly",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("updates_hourly",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_hourly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_hourly",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_daily",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("updates_daily",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_daily",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_daily",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_weekly",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("updates_weekly",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_weekly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_weekly",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_biweekly",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("updates_biweekly",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_biweekly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_biweekly",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_monthly",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("updates_monthly",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_monthly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_monthly",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_quarterly",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("updates_quarterly",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_quarterly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_quarterly",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_yearly",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("updates_yearly",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_yearly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_yearly",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("start_hourly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_hourly",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("start_daily",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_daily",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("start_weekly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_weekly",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("start_biweekly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_biweekly",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("start_monthly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_monthly",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("start_quarterly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_quarterly",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("start_yearly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_yearly",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("viewed",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("updated",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("created",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("checked",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errored",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("emailed",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("data",            XOBJ_DTYPE_OTHER,     	null, false);
 	}
 	
 	/**
@@ -123,6 +167,20 @@ class ImagesImages extends ImagesXoopsObject
 	}
 	
 	/**
+	 * Checks for ending of a statistic time cursor
+	 * 
+	 * @param unknown $case
+	 */
+	public function isStatistianEnding($case = '')
+	{
+	    if (in_array($case, imagesEnumeratorValues('statistics.php', 'mode')))
+	    {
+	        return (self::getVar("ended_$case") < time());
+	    }
+	    return false;
+	}
+	
+	/**
 	 * Adds View(s) count to object
 	 * 
 	 * @param number $number
@@ -130,9 +188,9 @@ class ImagesImages extends ImagesXoopsObject
 	 */
 	public function addViews($number = 1)
 	{
-	    $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_images") . "` SET `views` = `views` + $number, `viewed` = UNIX_TIMESTAMP() WHERE `id` = " . self::getVar('id');
+	    $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_images") . "` SET `views` = `views` + $number, `views_hourly` = `views_hourly` + $number, `views_daily` = `views_daily` + $number, `views_weekly` = `views_weekly` + $number, `views_biweekly` = `views_biweekly` + $number, `views_monthly` = `views_monthly` + $number, `views_quarterly` = `views_quarterly` + $number, `views_yearly` = `views_yearly` + $number, `viewed` = UNIX_TIMESTAMP() WHERE `id` = " . self::getVar('id');
 	    @$GLOBALS['xoopsDB']->queryF($sql);
-	    $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_fields") . "` SET `views` = `views` + $number, `viewed` = UNIX_TIMESTAMP() WHERE `field` = '" . self::getVar('field') . "'";
+	    $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_fields") . "` SET `views` = `views` + $number, `views_hourly` = `views_hourly` + $number, `views_daily` = `views_daily` + $number, `views_weekly` = `views_weekly` + $number, `views_biweekly` = `views_biweekly` + $number, `views_monthly` = `views_monthly` + $number, `views_quarterly` = `views_quarterly` + $number, `views_yearly` = `views_yearly` + $number, `viewed` = UNIX_TIMESTAMP() WHERE `field` = '" . self::getVar('field') . "'";
 	    @$GLOBALS['xoopsDB']->queryF($sql);
 	}
 	
@@ -146,9 +204,9 @@ class ImagesImages extends ImagesXoopsObject
 	public function addMegabytes($bytes = 0)
 	{
 	    $megabytes = $bytes / 1024 / 1024;
-	    $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_images") . "` SET `megabytes` = `megabytes` + '$megabytes', `updated` = UNIX_TIMESTAMP() WHERE `id` = " . self::getVar('id');
+	    $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_images") . "` SET `megabytes` = `megabytes` + '$megabytes', `megabytes_hourly` = `megabytes_hourly` + '$megabytes', `megabytes_daily` = `megabytes_daily` + '$megabytes', `megabytes_weekly` = `megabytes_weekly` + '$megabytes', `megabytes_biweekly` = `megabytes_biweekly` + '$megabytes', `megabytes_monthly` = `megabytes_monthly` + '$megabytes', `megabytes_quarterly` = `megabytes_quarterly` + '$megabytes', `megabytes_yearly` = `megabytes_yearly` + '$megabytes', `updated` = UNIX_TIMESTAMP() WHERE `id` = " . self::getVar('id');
 	    @$GLOBALS['xoopsDB']->queryF($sql);
-	    $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_fields") . "` SET `megabytes` = `megabytes` + '$megabytes' WHERE `field` = '" . self::getVar('field') . "'";
+	    $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_fields") . "` SET `megabytes` = `megabytes` + '$megabytes', `megabytes_hourly` = `megabytes_hourly` + '$megabytes', `megabytes_daily` = `megabytes_daily` + '$megabytes', `megabytes_weekly` = `megabytes_weekly` + '$megabytes', `megabytes_biweekly` = `megabytes_biweekly` + '$megabytes', `megabytes_monthly` = `megabytes_monthly` + '$megabytes', `megabytes_quarterly` = `megabytes_quarterly` + '$megabytes', `megabytes_yearly` = `megabytes_yearly` + '$megabytes' WHERE `field` = '" . self::getVar('field') . "'";
 	    @$GLOBALS['xoopsDB']->queryF($sql);
 	}
 	
@@ -686,6 +744,12 @@ class ImagesImages extends ImagesXoopsObject
 class ImagesImagesHandler extends ImagesXoopsPersistableObjectHandler
 {
 
+    /**
+     * Variables that comprise of statistic indicies
+     * 
+     * @var array
+     */
+    var $_statistian_fields = array('views','updates','errors','megabytes');
     
     /**
      * Constructor
@@ -715,9 +779,10 @@ class ImagesImagesHandler extends ImagesXoopsPersistableObjectHandler
             $field = $fieldsHandler->create();
             $field->setVar('field', $object->getVar('field'));
             $field->setVar('typal', $object->getFieldTypal());
+            $field->setVars(imagesStatisticalTiming(array()));
             if (!$field = $fieldsHandler->get($fieldsHandler->insert($field, true)))
                 return false;
-
+            $object->setVar('fieldid', $field->getVar('id'));
             if ($object->getVar('uid')==0 && is_object($GLOBALS['xoopsUser']))
                 $object->setVar('uid', $GLOBALS['xoopsUser']->getVar('uid'));
             $object->setVar('created', time());
@@ -729,6 +794,7 @@ class ImagesImagesHandler extends ImagesXoopsPersistableObjectHandler
                 $crc = new xcp($data = $field->getVar('hash').$object->getVar('uid').$imagesConfigList['format'].microtime().$object->getVar('url'), mt_rand(0,255), mt_rand(5,14));
                 $object->setVar('hash', $crc->crc);
             }
+            $object->setVars(imagesStatisticalTiming(array()));
             $criteria = new CriteriaCompo(new Criteria('uid', $object->getVar('uid')));    
             $criteria->add(new Criteria('field', $object->getVar('field')));
             if (!in_array($object->getVar('field'), $imagesConfigList['ascii_fields']))
@@ -748,7 +814,6 @@ class ImagesImagesHandler extends ImagesXoopsPersistableObjectHandler
                 }
                 return $id;
             } else {
-
                 if (in_array($object->getVar('field'), $imagesConfigList['ascii_fields']))
                 {
                     $crc = new xcp($data = $object->getVar('uid').'ascii'.microtime().$object->getVar('url'), mt_rand(0,255), mt_rand(5,14));

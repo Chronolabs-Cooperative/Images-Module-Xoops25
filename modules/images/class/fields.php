@@ -42,10 +42,52 @@ class ImagesFields extends ImagesXoopsObject
 		$this->initVar("field",     XOBJ_DTYPE_TXTBOX,    	null, false, 64);
 		$this->initVar("typal",     XOBJ_DTYPE_ENUM,     	'unknown', false, false, false, imagesEnumeratorValues(basename(__FILE__), 'typal'));
 		$this->initVar("views",     XOBJ_DTYPE_INT,     	null, false);
-		$this->initVar("viewed",    XOBJ_DTYPE_INT,     	null, false);
 		$this->initVar("images",    XOBJ_DTYPE_INT,     	null, false);
 		$this->initVar("errors",    XOBJ_DTYPE_INT,     	null, false);
 		$this->initVar("megabytes", XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_hourly",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("images_hourly",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_hourly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_hourly",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_daily",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("images_daily",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_daily",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_daily",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_weekly",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("images_weekly",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_weekly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_weekly",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_biweekly",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("images_biweekly",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_biweekly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_biweekly",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_monthly",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("images_monthly",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_monthly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_monthly",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_quarterly",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("images_quarterly",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_quarterly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_quarterly",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("views_yearly",           XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("images_yearly",         XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("errors_yearly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("megabytes_yearly",       XOBJ_DTYPE_FLOAT,     	null, false);
+		$this->initVar("start_hourly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_hourly",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("start_daily",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_daily",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("start_weekly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_weekly",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("start_biweekly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_biweekly",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("start_monthly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_monthly",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("start_quarterly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_quarterly",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("start_yearly",          XOBJ_DTYPE_INT,     	    null, false);
+		$this->initVar("ended_yearly",       XOBJ_DTYPE_INT,     	null, false);
+		$this->initVar("viewed",    XOBJ_DTYPE_INT,     	null, false);
 		$this->initVar("created",   XOBJ_DTYPE_INT,     	null, false);
 		$this->initVar("errored",   XOBJ_DTYPE_INT,     	null, false);
 	}
@@ -77,6 +119,13 @@ class ImagesFields extends ImagesXoopsObject
 class ImagesFieldsHandler extends ImagesXoopsPersistableObjectHandler
 {
 
+    
+    /**
+     * Variables that comprise of statistic indicies
+     *
+     * @var array
+     */
+    var $_statistian_fields = array('views','images','errors','megabytes');
     
     /**
      * Constructor
@@ -175,7 +224,7 @@ class ImagesFieldsHandler extends ImagesXoopsPersistableObjectHandler
      */
     function addImages($field = '', $typal = '', $number = 1)
     {
-        $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_fields") . "` SET `images` = `images` + '$number' WHERE `field` = '" . $field . "' AND `typal` = '" . $typal . "'";
+        $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_fields") . "` SET `images` = `images` + '$number', `images_hourly` = `images_hourly` + '$number', `images_daily` = `images_daily` + '$number', `images_weekly` = `images_weekly` + '$number', `images_biweekly` = `images_biweekly` + '$number', `images_monthly` = `images_monthly` + '$number', `images_quarterly` = `images_quarterly` + '$number', `images_yearly` = `images_yearly` + '$number' WHERE `field` = '" . $field . "' AND `typal` = '" . $typal . "'";
         @$GLOBALS['xoopsDB']->queryF($sql);
     }
     
@@ -189,7 +238,7 @@ class ImagesFieldsHandler extends ImagesXoopsPersistableObjectHandler
      */
     function addErrors($field = '', $typal = '', $number = 1)
     {
-        $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_fields") . "` SET `errors` = `errors` + '$number', `errored` = UNIX_TIMESTAMP() WHERE `field` = '" . $field . "' AND `typal` = '" . $typal . "'";
+        $sql = "UPDATE `" . $GLOBALS['xoopsDB']->prefix("images_fields") . "` SET `errors` = `errors` + '$number', `errors_hourly` = `errors_hourly` + '$number', `errors_daily` = `errors_daily` + '$number', `errors_weekly` = `errors_weekly` + '$number', `errors_biweekly` = `errors_biweekly` + '$number', `errors_monthly` = `errors_monthly` + '$number', `errors_quarterly` = `errors_quarterly` + '$number', `errors_yearly` = `errors_yearly` + '$number', `errored` = UNIX_TIMESTAMP() WHERE `field` = '" . $field . "' AND `typal` = '" . $typal . "'";
         @$GLOBALS['xoopsDB']->queryF($sql);
     }
 }

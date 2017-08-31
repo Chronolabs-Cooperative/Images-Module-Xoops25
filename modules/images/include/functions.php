@@ -57,6 +57,34 @@ function images_load_config()
 }
 
 
+if (!function_exists("imagesStatisticalTiming")) {
+    /**
+     * Loads a field enumerator values
+     *
+     * @param string $filename
+     * @param string $variable
+     * @return array():
+     */
+    function imagesStatisticalTiming($values = array())
+    {
+        $options = array(   'hourly' => 3600, 'daily' => 3600 * 24, 'weekly' => 3600 * 24 * 7, 'biweekly' => 3600 * 24 * 7 * 2,
+                            'monthly' => 3600 * 24 * 7 * 4, 'quarterly' => 3600 * 24 * 7 * 4 * 4, 'yearly' => 3600 * 24 * 7 * 4 * 12    );
+        
+        foreach($options as $key => $seconds)
+        {
+            if (isset($values['ended_'.$key]) && !empty($values['ended_'.$key]) && $values['ended_'.$key] < time())
+            {
+                $values['start_'.$key] = $values['ended_'.$key] + $seconds;
+                $values['ended_'.$key] = $values['start_'.$key] + $seconds;
+            } elseif (!isset($values['ended_'.$key]) || empty($values['ended_'.$key])) {
+                $values['start_'.$key] = time();
+                $values['ended_'.$key] = time() + $seconds;
+            }
+        }
+        return $values;
+    }
+}
+
 if (!function_exists("imagesEnumeratorValues")) {
     /**
      * Loads a field enumerator values

@@ -206,7 +206,17 @@ $modversion["config"][] 				= array(
                                                     "description"   => "IMAGES_MI_DATA_PATH_DESC",
                                                     "formtype"      => "textbox",
                                                     "valuetype"     => "text",
-                                                    "default"       => "images",
+                                                    "default"       => basename(__DIR__),
+                                                    "category"		=> "paths"
+                                                );
+
+$modversion["config"][] 				= array(
+                                                    "name"          => "history_data_path",
+                                                    "title"         => "IMAGES_MI_HISTORY_DATA_PATH",
+                                                    "description"   => "IMAGES_MI_HISTORY_DATA_PATH_DESC",
+                                                    "formtype"      => "textbox",
+                                                    "valuetype"     => "text",
+                                                    "default"       => basename(__DIR__).'-history',
                                                     "category"		=> "paths"
                                                 );
 
@@ -370,6 +380,26 @@ $modversion["config"][] 				= array(
                                                     "valuetype"     => "array",
                                                     "default"       => array("group_icon_url","group_logo_url","author_photo_url","author_avatar_url"),
                                                     "options"       => $options,
+                                                    "category"		=> "module"
+                                                );
+
+$modversion["config"][] 				= array(
+                                                    "name"          => "moderator_groups",
+                                                    "title"         => "IMAGES_MI_MODERATOR_GROUPS",
+                                                    "description"   => "IMAGES_MI_MODERATOR_GROUPS_DESC",
+                                                    "formtype"      => "group_multi",
+                                                    "valuetype"     => "array",
+                                                    "default"       => array(XOOPS_GROUP_ADMIN=>XOOPS_GROUP_ADMIN),
+                                                    "category"		=> "module"
+                                                );
+
+$modversion["config"][] 				= array(
+                                                    "name"          => "reporting_groups",
+                                                    "title"         => "IMAGES_MI_REPORTING_GROUPS",
+                                                    "description"   => "IMAGES_MI_REPORTING_GROUPS_DESC",
+                                                    "formtype"      => "group_multi",
+                                                    "valuetype"     => "array",
+                                                    "default"       => array(XOOPS_GROUP_ADMIN=>XOOPS_GROUP_ADMIN),
                                                     "category"		=> "module"
                                                 );
 
